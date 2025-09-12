@@ -1,8 +1,21 @@
-const Authors = (props) => {
+import React from "react";
+
+interface Author {
+  name: string;
+  born: number;
+  bookCount: number;
+}
+
+interface AuthorsProps {
+  show: boolean;
+}
+
+const Authors: React.FC<AuthorsProps> = (props) => {
   if (!props.show) {
-    return null
+    return null;
   }
-  const authors = []
+
+  const authors: Author[] = [];
 
   return (
     <div>
@@ -24,7 +37,7 @@ const Authors = (props) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Authors
+export default Authors;

@@ -1,9 +1,21 @@
-const Books = (props) => {
+import React from "react";
+
+interface Book {
+  title: string;
+  author: string;
+  published: number;
+}
+
+interface BooksProps {
+  show: boolean;
+}
+
+const Books: React.FC<BooksProps> = (props) => {
   if (!props.show) {
-    return null
+    return null;
   }
 
-  const books = []
+  const books: Book[] = [];
 
   return (
     <div>
@@ -26,7 +38,7 @@ const Books = (props) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Books
+export default Books;
