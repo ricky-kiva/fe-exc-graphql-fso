@@ -3,6 +3,8 @@ import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { ADD_BOOK } from '../graphql/operations/mutations/book';
 import type { AddBookParam } from '../graphql/types/params/book';
 import type { Book } from '../types/Book';
+import { ALL_AUTHORS } from '../graphql/operations/queries/author';
+import { ALL_BOOKS } from '../graphql/operations/queries/book';
 
 interface NewBookProps {
   show: boolean;
@@ -15,7 +17,12 @@ const NewBook: React.FC<NewBookProps> = (props) => {
   const [genre, setGenre] = useState<string>("");
   const [genres, setGenres] = useState<string[]>([]);
 
-  const [ addBook ] = useMutation<Book, AddBookParam>(ADD_BOOK);
+  const [ addBook ] = useMutation<Book, AddBookParam>(ADD_BOOK, {
+    refetchQueries: [
+      { query: ALL_AUTHORS },
+      { query: ALL_BOOKS }
+    ]
+  });
 
   if (!props.show) return null;
 
