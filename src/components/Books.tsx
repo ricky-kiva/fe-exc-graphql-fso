@@ -1,26 +1,33 @@
 import React from "react";
-
-interface Book {
-  title: string;
-  author: string;
-  published: number;
-}
+import { AllBooksData } from '../graphql/types/book';
+import { useQuery } from '@apollo/client/react';
+import { ALL_BOOKS } from '../graphql/operations/book';
+import Book from '../types/Book';
 
 interface BooksProps {
   show: boolean;
 }
 
 const Books: React.FC<BooksProps> = (props) => {
-  if (!props.show) {
-    return null;
+  const result = useQuery<AllBooksData>(ALL_BOOKS, {
+    skip: !props.show
+  });
+
+  if (!props.show) return null;
+
+  if (result.loading) {
+    return <div>Loading..</div>;
   }
 
-  const books: Book[] = [];
+  if (!result.data) {
+    return <div>Failed to fetch Books data</div>;
+  }
+
+  const books: Book[] = result.data?.allBooks;
 
   return (
     <div>
       <h2>books</h2>
-
       <table>
         <tbody>
           <tr>
@@ -29,7 +36,7 @@ const Books: React.FC<BooksProps> = (props) => {
             <th>published</th>
           </tr>
           {books.map((a) => (
-            <tr key={a.title}>
+            <tr key={a.id}>
               <td>{a.title}</td>
               <td>{a.author}</td>
               <td>{a.published}</td>
