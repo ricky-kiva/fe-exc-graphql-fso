@@ -1,4 +1,8 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useMutation } from '@apollo/client/react';
+import React, { useState, type ChangeEvent, type FormEvent } from "react";
+import { ADD_BOOK } from '../graphql/operations/mutations/book';
+import type { AddBookParam } from '../graphql/types/params/book';
+import type { Book } from '../types/Book';
 
 interface NewBookProps {
   show: boolean;
@@ -7,24 +11,55 @@ interface NewBookProps {
 const NewBook: React.FC<NewBookProps> = (props) => {
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
-  const [published, setPublished] = useState<string>("");
+  const [published, setPublished] = useState<number>(0);
   const [genre, setGenre] = useState<string>("");
   const [genres, setGenres] = useState<string[]>([]);
 
-  if (!props.show) {
-    return null;
-  }
+  const [ addBook ] = useMutation<Book, AddBookParam>(ADD_BOOK);
+
+  if (!props.show) return null;
+
+  const validateSubmit = (): boolean => {
+    if (!title) {
+      alert("Title is required");
+      return false;
+    }
+
+    if (!author) {
+      alert("Author is required");
+      return false;
+    }
+
+    if (genres.length === 0) {
+      alert("At least one genre is required");
+      return false;
+    }
+
+    return true;
+  };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log("add book...");
+    if (!validateSubmit()) return;
 
-    setTitle("");
-    setPublished("");
-    setAuthor("");
-    setGenres([]);
-    setGenre("");
+    try {
+      addBook({
+        variables: { title, published, author, genres }
+      });
+
+      setTitle("");
+      setPublished(0);
+      setAuthor("");
+      setGenres([]);
+      setGenre("");
+
+      alert("Book added successfully!");
+    } catch(e: unknown) {
+      if (e instanceof Error) {
+        alert(`Failed to add book: ${e.message}`);
+      }
+    }
   };
 
   const addGenre = () => {
@@ -58,9 +93,10 @@ const NewBook: React.FC<NewBookProps> = (props) => {
           <input
             type="number"
             value={published}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPublished(e.target.value)
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const val = e.target.value;
+              if (/^\d*$/.test(val)) setPublished(val === "" ? 0 : Number(val));
+            }}
           />
         </div>
         <div>
