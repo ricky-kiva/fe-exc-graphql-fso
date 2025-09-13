@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client/react';
 import React from "react";
-import Author from '../types/Author';
-import { AllAuthorsData } from '../graphql/types/author';
-import { ALL_AUTHORS } from '../graphql/operations/author';
+import { ALL_AUTHORS } from '../graphql/operations/queries/author';
+import type { AllAuthorsData } from '../graphql/types/author';
+import type Author from '../types/Author';
 
 interface AuthorsProps {
   show: boolean;

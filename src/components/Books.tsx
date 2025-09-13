@@ -1,8 +1,8 @@
 import React from "react";
 import { AllBooksData } from '../graphql/types/book';
 import { useQuery } from '@apollo/client/react';
-import { ALL_BOOKS } from '../graphql/operations/book';
 import Book from '../types/Book';
+import { ALL_BOOKS } from '../graphql/operations/queries/book';
 
 interface BooksProps {
   show: boolean;
