@@ -1,4 +1,4 @@
-export default interface Author {
+export interface Author {
   id: string;
   name: string;
   born: number;
