@@ -9,8 +9,6 @@ const App: React.FC = () => {
   const [page, setPage] = useState<string>("authors");
   const [token, setToken] = useState<string | null>(null);
 
-  console.log(token);
-
   const client = useApolloClient();
 
   const logout = () => {
