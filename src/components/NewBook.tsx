@@ -2,9 +2,10 @@ import { useMutation } from '@apollo/client/react';
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { ADD_BOOK } from '../graphql/operations/mutations/book';
 import type { AddBookParam } from '../graphql/types/params/book';
-import type { Book } from '../types/Book';
 import { ALL_AUTHORS } from '../graphql/operations/queries/author';
 import { ALL_BOOKS } from '../graphql/operations/queries/book';
+import type { AddBookData, AllBooksData } from '../graphql/types/data/book';
+import type { AllAuthorsData } from '../graphql/types/data/author';
 
 interface NewBookProps {
   show: boolean;
@@ -17,11 +18,25 @@ const NewBook: React.FC<NewBookProps> = (props) => {
   const [genre, setGenre] = useState<string>("");
   const [genres, setGenres] = useState<string[]>([]);
 
-  const [ addBook ] = useMutation<Book, AddBookParam>(ADD_BOOK, {
-    refetchQueries: [
-      { query: ALL_AUTHORS },
-      { query: ALL_BOOKS }
-    ]
+  const [ addBook ] = useMutation<AddBookData, AddBookParam>(ADD_BOOK, {
+    update: (cache, res) => {
+      const newBook = res.data?.addBook;
+      if (!newBook) return;
+
+      cache.updateQuery<AllBooksData>({ query: ALL_BOOKS }, (data) => {
+        if (!data) return data;
+        return { allBooks: data.allBooks.concat(newBook) };
+      });
+      cache.updateQuery<AllAuthorsData>({ query: ALL_AUTHORS }, (data) => {
+        if (!data) return data;
+
+        const isAuthorExists = data.allAuthors.some((a) => a.id === newBook.author.id);
+
+        if (isAuthorExists) return data;
+
+        return { allAuthors: data.allAuthors.concat(newBook.author) };
+      });
+    }
   });
 
   if (!props.show) return null;
@@ -51,7 +66,7 @@ const NewBook: React.FC<NewBookProps> = (props) => {
     if (!validateSubmit()) return;
 
     try {
-      addBook({
+      await addBook({
         variables: { title, published, author, genres }
       });
 

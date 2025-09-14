@@ -11,3 +11,7 @@ export interface AllGenresData {
 interface GenresBookData {
   genres: string[];
 }
+
+export interface AddBookData {
+  addBook: Book;
+}
