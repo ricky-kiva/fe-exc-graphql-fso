@@ -24,11 +24,11 @@ const NewBook: React.FC<NewBookProps> = (props) => {
       if (!newBook) return;
 
       cache.updateQuery<AllBooksData>({ query: ALL_BOOKS }, (data) => {
-        if (!data) return data;
+        if (!data) return { allBooks: [newBook] };
         return { allBooks: data.allBooks.concat(newBook) };
       });
       cache.updateQuery<AllAuthorsData>({ query: ALL_AUTHORS }, (data) => {
-        if (!data) return data;
+        if (!data) return { allAuthors: [newBook.author] };
 
         const isAuthorExists = data.allAuthors.some((a) => a.id === newBook.author.id);
 

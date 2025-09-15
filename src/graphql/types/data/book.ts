@@ -8,10 +8,14 @@ export interface AllGenresData {
   allBooks: GenresBookData[];
 }
 
-interface GenresBookData {
-  genres: string[];
-}
-
 export interface AddBookData {
   addBook: Book;
+}
+
+export interface BookAddedData {
+  bookAdded: Book;
+}
+
+interface GenresBookData {
+  genres: string[];
 }
