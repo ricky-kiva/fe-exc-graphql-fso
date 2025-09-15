@@ -7,6 +7,7 @@ import type { LoginData } from '../graphql/types/data/user';
 interface LoginProps {
   show: boolean;
   setToken: Dispatch<React.SetStateAction<string | null>>;
+  setPage: Dispatch<React.SetStateAction<string>>;
 }
 
 const Login: React.FC<LoginProps> = (props) => {
@@ -50,6 +51,8 @@ const Login: React.FC<LoginProps> = (props) => {
         props.setToken(token);
 
         localStorage.setItem('user-token', token);
+
+        props.setPage("authors");
       }
     } catch(e: unknown) {
       if (e instanceof Error) {
@@ -80,7 +83,7 @@ const Login: React.FC<LoginProps> = (props) => {
             }
           />
         </div>
-        <button type="submit">create book</button>
+        <button type="submit">login</button>
       </form>
     </div>
   );

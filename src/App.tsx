@@ -68,9 +68,9 @@ const App: React.FC = () => {
         {token && <button onClick={logout}>logout</button>}
       </div>
 
-      <Authors show={page === "authors"} />
+      <Authors show={page === "authors"} token={token} />
       <Books show={page === "books"} />
-      <Login show={page === "login"} setToken={setToken} />
+      <Login show={page === "login"} setToken={setToken} setPage={setPage}/>
       <NewBook show={page === "add"} />
       <Recommendations show={page === "recommend"} />
     </div>

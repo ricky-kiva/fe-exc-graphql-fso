@@ -8,6 +8,7 @@ import { EDIT_AUTHOR } from '../graphql/operations/mutations/author';
 
 interface AuthorsProps {
   show: boolean;
+  token: (string | null);
 }
 
 interface SetAuthorBornProps {
@@ -51,7 +52,7 @@ const Authors: React.FC<AuthorsProps> = (props) => {
         </tbody>
       </table>
 
-      <SetAuthorBorn authors={authors} />
+      {props.token && <SetAuthorBorn authors={authors} />}
     </div>
   );
 };
